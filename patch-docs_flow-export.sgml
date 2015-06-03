@@ -1,0 +1,127 @@
+--- docs/flow-export.sgml.orig	2007-10-22 05:10:58.000000000 +0800
++++ docs/flow-export.sgml	2015-06-03 22:15:51.000000000 +0700
+@@ -21,13 +21,15 @@
+ <cmdsynopsis>
+ <command>flow-export</command>
+ <arg>-h</arg>
++<arg>-n</arg>
+ <arg>-d<replaceable> debug_level</replaceable></arg>
+ <arg>-f<replaceable> format</replaceable></arg>
+ <arg>-m<replaceable> mask_fields</replaceable></arg>
+ <arg>-u<replaceable> user:password:host:port:name:table</replaceable></arg>
++<arg>-c<replaceable> name[,name2]:data[,data2]</replaceable></arg>
+ </cmdsynopsis>
+ </refsynopsisdiv>
+-
++Use numeric IP format, instead human readable
+ 
+ <refsect1>
+ <title>DESCRIPTION</title>
+@@ -51,6 +53,15 @@
+ </varlistentry>
+ 
+ <varlistentry>
++<term>-n</term>
++<listitem>
++<para>
++Use numeric IP format, instead human readable.
++</para>
++</listitem>
++</varlistentry>
++
++<varlistentry>
+ <term>-f<replaceable> format</replaceable></term>
+ <listitem>
+ <para>
+@@ -88,16 +99,16 @@
+     UNIX_NSECS      0x0000000000000002LL
+     SYSUPTIME       0x0000000000000004LL
+     EXADDR          0x0000000000000008LL
+-    
++
+     DFLOWS          0x0000000000000010LL
+     DPKTS           0x0000000000000020LL
+     DOCTETS         0x0000000000000040LL
+     FIRST           0x0000000000000080LL
+-    
++
+     LAST            0x0000000000000100LL
+     ENGINE_TYPE     0x0000000000000200LL
+     ENGINE_ID       0x0000000000000400LL
+-    
++
+     SRCADDR         0x0000000000001000LL
+     DSTADDR         0x0000000000002000LL
+     SRC_PREFIX      0x0000000000004000LL
+@@ -106,17 +117,17 @@
+     INPUT           0x0000000000020000LL
+     OUTPUT          0x0000000000040000LL
+     SRCPORT         0x0000000000080000LL
+-    
++
+     DSTPORT         0x0000000000100000LL
+     PROT            0x0000000000200000LL
+     TOS             0x0000000000400000LL
+     TCP_FLAGS       0x0000000000800000LL
+-    
++
+     SRC_MASK        0x0000000001000000LL
+     DST_MASK        0x0000000002000000LL
+     SRC_AS          0x0000000004000000LL
+     DST_AS          0x0000000008000000LL
+-    
++
+     IN_ENCAPS       0x0000000010000000LL
+     OUT_ENCAPS      0x0000000020000000LL
+     PEER_NEXTHOP    0x0000000040000000LL
+@@ -155,7 +166,7 @@
+     PEERNEXTHOPMASK    0x00200000
+     ENGINETYPEMASK     0x00400000
+     ENGINEIDMASK       0x00800000
+-    
++
+     INDEX_V1_MASK      0x00043FFF
+     INDEX_V5_MASK      0x00C7FFFF
+     INDEX_V6_MASK      0x00FFFFFF
+@@ -165,7 +176,7 @@
+     INDEX_V8_3_MASK    0x00C14D8B
+     INDEX_V8_4_MASK    0x00C28D95
+     INDEX_V8_5_MASK    0x00C3CD9F
+-</screen> 
++</screen>
+ </para>
+ <para>
+ The default value is all fields applicable to the the flow file, or
+@@ -183,6 +194,15 @@
+ </listitem>
+ </varlistentry>
+ 
++<varlistentry>
++<term>-c<replaceable> name[,name2]:data[,data2]</replaceable></term>
++<listitem>
++<para>
++Set custom fields and data for MySQL or PostgresSQL insertions.
++</para>
++</listitem>
++</varlistentry>
++
+ </variablelist>
+ </refsect1>
+ 
+@@ -220,7 +240,7 @@
+ Include only SRCADDR, DSTADDR and DOCTETS.
+ </para>
+ <para>
+-  <command>flow-export -f3 -mSRCADDR,DSTADDR,DOCTETS -u "user:password:host:port:name:table" &lt flows </command>
++  <command>flow-export -f3 -n -mSRCADDR,DSTADDR,DOCTETS -u "user:password:host:port:name:table" -c "report_id,is_local:45,1" &lt flows </command>
+ </para>
+ </informalexample>
+ </refsect1>
+@@ -249,6 +269,7 @@
+ </author>
+ <email>wyu@ateno.edu</email>
+ </para>
++
+ </refsect1>
+ 
+ <refsect1>

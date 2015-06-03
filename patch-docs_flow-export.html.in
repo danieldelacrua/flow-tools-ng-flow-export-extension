@@ -1,0 +1,301 @@
+--- docs/flow-export.html.in.orig	2010-08-26 20:34:41.000000000 +0800
++++ docs/flow-export.html.in	2015-06-03 22:04:32.000000000 +0700
+@@ -1,11 +1,11 @@
+-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+ <HTML
+ ><HEAD
+ ><TITLE
+ >flow-export</TITLE
+ ><META
+ NAME="GENERATOR"
+-CONTENT="Modular DocBook HTML Stylesheet Version 1.79"></HEAD
++CONTENT="Modular DocBook HTML Stylesheet Version 1.73
++"></HEAD
+ ><BODY
+ CLASS="REFENTRY"
+ BGCOLOR="#FFFFFF"
+@@ -16,10 +16,10 @@
+ ><H1
+ ><A
+ NAME="AEN1"
+-></A
+-><TT
++><SPAN
+ CLASS="APPLICATION"
+->flow-export</TT
++>flow-export</SPAN
++></A
+ ></H1
+ ><DIV
+ CLASS="REFNAMEDIV"
+@@ -28,9 +28,9 @@
+ ></A
+ ><H2
+ >Name</H2
+-><TT
++><SPAN
+ CLASS="APPLICATION"
+->flow-export</TT
++>flow-export</SPAN
+ >&nbsp;--&nbsp;Export flow-tools files into other NetFlow packages.</DIV
+ ><DIV
+ CLASS="REFSYNOPSISDIV"
+@@ -43,7 +43,7 @@
+ ><B
+ CLASS="COMMAND"
+ >flow-export</B
+-> [-h] [-d<TT
++>  [-h] [-n] [-d<TT
+ CLASS="REPLACEABLE"
+ ><I
+ > debug_level</I
+@@ -63,6 +63,11 @@
+ ><I
+ > user:password:host:port:name:table</I
+ ></TT
++>] [-c<TT
++CLASS="REPLACEABLE"
++><I
++> name[,name2]:data[,data2]</I
++></TT
+ >]</P
+ ></DIV
+ ><DIV
+@@ -103,6 +108,12 @@
+ >Enable debugging.</P
+ ></DD
+ ><DT
++>-n</DT
++><DD
++><P
++>Use numeric IP format, instead human readable.</P
++></DD
++<DT
+ >-f<TT
+ CLASS="REPLACEABLE"
+ ><I
+@@ -143,28 +154,22 @@
+ >
+ is built from a bitwise OR of the following:</P
+ ><P
+-><TABLE
+-BORDER="0"
+-BGCOLOR="#E0E0E0"
+-WIDTH="90%"
+-><TR
+-><TD
+ ><PRE
+ CLASS="SCREEN"
+ >    UNIX_SECS       0x0000000000000001LL
+     UNIX_NSECS      0x0000000000000002LL
+     SYSUPTIME       0x0000000000000004LL
+     EXADDR          0x0000000000000008LL
+-    
++
+     DFLOWS          0x0000000000000010LL
+     DPKTS           0x0000000000000020LL
+     DOCTETS         0x0000000000000040LL
+     FIRST           0x0000000000000080LL
+-    
++
+     LAST            0x0000000000000100LL
+     ENGINE_TYPE     0x0000000000000200LL
+     ENGINE_ID       0x0000000000000400LL
+-    
++
+     SRCADDR         0x0000000000001000LL
+     DSTADDR         0x0000000000002000LL
+     SRC_PREFIX      0x0000000000004000LL
+@@ -173,26 +178,23 @@
+     INPUT           0x0000000000020000LL
+     OUTPUT          0x0000000000040000LL
+     SRCPORT         0x0000000000080000LL
+-    
++
+     DSTPORT         0x0000000000100000LL
+     PROT            0x0000000000200000LL
+     TOS             0x0000000000400000LL
+     TCP_FLAGS       0x0000000000800000LL
+-    
++
+     SRC_MASK        0x0000000001000000LL
+     DST_MASK        0x0000000002000000LL
+     SRC_AS          0x0000000004000000LL
+     DST_AS          0x0000000008000000LL
+-    
++
+     IN_ENCAPS       0x0000000010000000LL
+     OUT_ENCAPS      0x0000000020000000LL
+     PEER_NEXTHOP    0x0000000040000000LL
+     ROUTER_SC       0x0000000080000000LL
+     EXTRA_PKTS      0x0000000100000000LL
+     MARKED_TOS      0x0000000200000000LL</PRE
+-></TD
+-></TR
+-></TABLE
+ ></P
+ ><P
+ >When exporting to cflowd format the <TT
+@@ -203,12 +205,6 @@
+ >
+ field is the cflowd mask which is defined as the following:</P
+ ><P
+-><TABLE
+-BORDER="0"
+-BGCOLOR="#E0E0E0"
+-WIDTH="90%"
+-><TR
+-><TD
+ ><PRE
+ CLASS="SCREEN"
+ >    ROUTERMASK         0x00000001
+@@ -235,7 +231,7 @@
+     PEERNEXTHOPMASK    0x00200000
+     ENGINETYPEMASK     0x00400000
+     ENGINEIDMASK       0x00800000
+-    
++
+     INDEX_V1_MASK      0x00043FFF
+     INDEX_V5_MASK      0x00C7FFFF
+     INDEX_V6_MASK      0x00FFFFFF
+@@ -245,9 +241,6 @@
+     INDEX_V8_3_MASK    0x00C14D8B
+     INDEX_V8_4_MASK    0x00C28D95
+     INDEX_V8_5_MASK    0x00C3CD9F</PRE
+-></TD
+-></TR
+-></TABLE
+ > </P
+ ><P
+ >The default value is all fields applicable to the the flow file, or
+@@ -264,7 +257,18 @@
+ ><P
+ >Configure MySQL or PostgresSQL Access.</P
+ ></DD
+-></DL
++><DT
++>-c<TT
++CLASS="REPLACEABLE"
++><I
++> name[,name2]:data[,data2]</I
++></TT
++></DT
++><DD
++><P
++>Set custom fields and data for MySQL or PostgresSQL insertions.</P
++></DD
++</DL
+ ></DIV
+ ></DIV
+ ><DIV
+@@ -276,12 +280,12 @@
+ >EXAMPLES</H2
+ ><DIV
+ CLASS="INFORMALEXAMPLE"
+-><P
+-></P
+ ><A
+ NAME="AEN63"
+ ></A
+ ><P
++></P
++><P
+ >Convert the flow-tools file <TT
+ CLASS="FILENAME"
+ >flows</TT
+@@ -293,7 +297,7 @@
+ ><P
+ >  <B
+ CLASS="COMMAND"
+->flow-export -f0 &#60; flows &#62; flows.cflowd</B
++>flow-export -f0 &lt; flows &#62; flows.cflowd</B
+ ></P
+ ><P
+ ></P
+@@ -308,12 +312,12 @@
+ >EXAMPLES</H2
+ ><DIV
+ CLASS="INFORMALEXAMPLE"
+-><P
+-></P
+ ><A
+ NAME="AEN71"
+ ></A
+ ><P
++></P
++><P
+ >Convert the flow-tools file <TT
+ CLASS="FILENAME"
+ >flows</TT
+@@ -322,7 +326,7 @@
+ ><P
+ >  <B
+ CLASS="COMMAND"
+->flow-export -f2 -m0x3000 &#60; flows &#62; flows.ascii</B
++>flow-export -f2 -m0x3000 &lt; flows &#62; flows.ascii</B
+ ></P
+ ><P
+ ></P
+@@ -337,12 +341,12 @@
+ >EXAMPLES</H2
+ ><DIV
+ CLASS="INFORMALEXAMPLE"
+-><P
+-></P
+ ><A
+ NAME="AEN78"
+ ></A
+ ><P
++></P
++><P
+ >Export the flow-tools file <TT
+ CLASS="FILENAME"
+ >flows</TT
+@@ -351,7 +355,7 @@
+ ><P
+ >  <B
+ CLASS="COMMAND"
+->flow-export -f3 -mSRCADDR,DSTADDR,DOCTETS -u "user:password:host:port:name:table" &#60; flows </B
++>flow-export -f3 -n -mSRCADDR,DSTADDR,DOCTETS -u "user:password:host:port:name:table" -c "report_id,is_local:45,1" &lt; flows </B
+ ></P
+ ><P
+ ></P
+@@ -376,22 +380,22 @@
+ >AUTHOR</H2
+ ><P
+ >Mark Fullmer
+-<CODE
++<TT
+ CLASS="EMAIL"
+ >&#60;<A
+ HREF="mailto:maf@splintered.net"
+ >maf@splintered.net</A
+->&#62;</CODE
++>&#62;</TT
+ ></P
+ ><P
+ >Database Support:
+ William Emmanuel Yu
+-<CODE
++<TT
+ CLASS="EMAIL"
+ >&#60;<A
+ HREF="mailto:wyu@ateno.edu"
+ >wyu@ateno.edu</A
+->&#62;</CODE
++>&#62;</TT
+ ></P
+ ></DIV
+ ><DIV
+@@ -402,9 +406,9 @@
+ ><H2
+ >SEE ALSO</H2
+ ><P
+-><TT
++><SPAN
+ CLASS="APPLICATION"
+->flow-tools</TT
++>flow-tools</SPAN
+ >(1)</P
+ ></DIV
+ ></BODY
